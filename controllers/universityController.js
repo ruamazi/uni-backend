@@ -5,8 +5,8 @@ export const createUniversity = async (req, res) => {
   if (
     !name ||
     !location ||
-    name.trim().length() === 0 ||
-    location.trim().length() === 0
+    name.trim().length === 0 ||
+    location.trim().length === 0
   ) {
     return res.status(404).json({ error: "Name and location are required" });
   }
@@ -60,6 +60,30 @@ export const deleteUniversity = async (req, res) => {
     }
     await University.findByIdAndDelete(universityId);
     return res.status(200).json({ message: "Deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Somthing went wrong" });
+  }
+};
+
+export const getAll = async (req, res) => {
+  try {
+    const all = await University.find();
+    res.status(200).json(all);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Somthing went wrong" });
+  }
+};
+
+export const getOneById = async (req, res) => {
+  const { universityId } = req.params;
+  try {
+    const univ = await University.findById(universityId);
+    if (!univ) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    res.status(200).json(univ);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Somthing went wrong" });
